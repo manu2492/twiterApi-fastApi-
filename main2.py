@@ -23,50 +23,43 @@ class UserBase(BaseModel):
     user_id: UUID = Field(...)
     email: EmailStr = Field(...)
 
-
 class UserLogin(UserBase):
     password: str = Field(
-            ...,
-            min_length = 8,
-            max_length = 64 
-            )
-
+        ..., 
+        min_length=8,
+        max_length=64
+    )
 
 class User(UserBase):
     first_name: str = Field(
-            ...,
-            min_length = 1,
-            max_length = 50
-            )
-
+        ...,
+        min_length=1,
+        max_length=50
+    )
     last_name: str = Field(
-            ...,
-            min_length = 1,
-            max_length = 50
-            )
-
-    bith_date: Optional[date] = Field(default = None)
-
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    birth_date: Optional[date] = Field(default=None)
 
 class UserRegister(User):
     password: str = Field(
-            ...,
-            min_length = 8,
-            max_length = 64
-            )
-
+        ..., 
+        min_length=8,
+        max_length=64
+    )
 
 class Tweet(BaseModel):
     tweet_id: UUID = Field(...)
     content: str = Field(
-            ...,
-            min_length = 1,
-            max_length = 256
-            )
+        ..., 
+        min_length=1, 
+        max_length=256
+    )
     created_at: datetime = Field(default=datetime.now())
     update_at: Optional[datetime] = Field(default=None)
     by: User = Field(...)
-
 
 # Path Operations
 
@@ -95,9 +88,9 @@ def signup(user: UserRegister = Body(...)):
         - email: Emailstr
         - first_name: str
         - last_name: str
-        - birth_date: str
+        - birth_date: datetime
     """
-    with open('users.json', 'r+', encoding = 'utf-8') as f:
+    with open("users.json", "r+", encoding="utf-8") as f: 
         results = json.loads(f.read())
         user_dict = user.dict()
         user_dict["user_id"] = str(user_dict["user_id"])
@@ -128,7 +121,22 @@ def login():
     tags=["Users"]
 )
 def show_all_users(): 
-    pass
+    """
+    This path operation shows all users in the app
+
+    Parameters: 
+        -
+
+    Returns a json list with all users in the app, with the following keys: 
+        - user_id: UUID
+        - email: Emailstr
+        - first_name: str
+        - last_name: str
+        - birth_date: datetime
+    """
+    with open("users.json", "r", encoding="utf-8") as f: 
+        results = json.loads(f.read())
+        return results
 
 ### Show a user
 @app.get(
@@ -220,4 +228,3 @@ def delete_a_tweet():
 )
 def update_a_tweet(): 
     pass
-
